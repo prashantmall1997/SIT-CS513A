@@ -1,0 +1,43 @@
+---
+title: "Mall_HW_08"
+author: "Prashant Pramodkumar Mall"
+date: "`r Sys.Date()`"
+output: pdf_document
+---
+
+```{r}
+#CS513-HW8
+#First Name: Prashant Pramodkumar
+#Last Name: Mall
+#CWID: 10459371
+
+rm(list=ls())
+
+#load the file
+df<-read.csv("/Users/prashantmall1997/Library/CloudStorage/OneDrive-Personal/Coding/Stevens-Courses/CS513A/HW8/wisc_bc_ContinuousVar.csv",na.strings = '?')
+summary(df)
+table(df$diagnosis)
+
+df<-na.omit(df)
+df<-df[-1]
+bcDist<-dist(df[,-1])
+hclustOp<-hclust(bcDist)
+plot(hclustOp)
+hclust2<-cutree(hclustOp,2)
+table(hclust2,df[,1])
+
+#K-means
+rm(list=ls())
+
+#load the file
+df<-read.csv("/Users/prashantmall1997/Library/CloudStorage/OneDrive-Personal/Coding/Stevens-Courses/CS513A/HW8/wisc_bc_ContinuousVar.csv",na.strings = '?')
+summary(df)
+table(df$diagnosis)
+
+df<-na.omit(df)
+df<-df[-1]
+kMeans<- kmeans(df[,-1],2,nstart = 10)
+kMeans$cluster
+table(kMeans$cluster,df[,1])
+```
+
