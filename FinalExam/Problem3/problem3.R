@@ -1,0 +1,50 @@
+#CS513 Final Exam
+#First Name: Prashant Pramodkumar
+#Last Name: Mall
+#CWID: 10459371
+
+rm(list=ls())
+
+#Library
+library(C50)
+
+#Load File
+df<-read.csv("/Users/prashantmall1997/Coding/KDD/Problem1/Attrition_Modified.csv",na.strings = '?')
+
+#Set Column 'Attrition' as factor
+df$Attrition <- factor(df$Attrition)
+
+#IDs for test-train df 
+id <- array()
+for (x in (0:as.integer(nrow(df)/4))) {
+  if(as.integer(4*x + 1) > (nrow(df))) {
+    break
+  }
+  id[x + 1] = as.integer(4*x + 1)
+}
+
+#Split Test and Train Data
+trainData <- df[-id,]
+testData <- df[id,]
+
+C50 <- C5.0(Attrition~., data = trainData)
+
+#Predicting using C50
+predictC50 <- predict(C50, testData, type = "class" )
+
+#Frequency Table
+table(C5.0 = predictC50, Attrition = testData$Attrition)
+
+#Wrong Predictions
+wrongC50 <- sum(predictC50 != testData$Attrition)
+
+result <- table(actual=testData$Attrition,predictC50)
+
+#Accuracy 
+accuracy <-(sum(diag(result))/(sum(rowSums(result)))*100)
+print(accuracy)
+
+#Error Rate
+errorRateC50 <- wrongC50/length(predictC50)
+print(paste("Error Rate:" , errorRateC50))
+
